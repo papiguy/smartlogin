@@ -45,13 +45,13 @@ public class UserSessionManager {
             smartUser = gson.fromJson(sessionUser, SmartUser.class);
         }
 
-        if (smartUser != null){
+        if (smartUser != null) {
             LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(user_type);
-            if (loginProvider.isLoggedIn(smartUser)){
+            if (loginProvider.isLoggedIn(smartUser)) {
                 return smartUser;
             }
         }
-        logout(context);
+        logout(context, smartUser);
         return null;
     }
 
@@ -86,15 +86,16 @@ public class UserSessionManager {
         }
     }
 
-    public static boolean logout(Context context) {
-        SharedPreferences preferences;
-        try {
+    protected static boolean logout(Context context, SmartUser user) {
 
-            SmartUser user = getCurrentUser(context);
+        if (user == null) {
+            return true;
+        }
+        try {
             LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(user.getProviderId());
             if (loginProvider != null) {
                 if (loginProvider.logout(user)) {
-                    preferences = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+                    SharedPreferences preferences = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
                     editor = preferences.edit();
                     editor.remove(USER_TYPE);
                     editor.remove(USER_SESSION);
@@ -106,6 +107,12 @@ public class UserSessionManager {
             Log.e("User Logout Error", e.getMessage());
             return false;
         }
+
         return true;
+    }
+
+    public static boolean logout(Context context) {
+        SmartUser user = getCurrentUser(context);
+        return logout(context, user);
     }
 }
