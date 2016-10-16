@@ -46,7 +46,7 @@ public class AppStore {
         }
     }
 
-    private static enum SupportedAppStore {
+    private enum SupportedAppStore {
         amazonAppstore("amazon", "amzn://apps/android?p=com.linkedin.android"),
         googlePlay("google", "market://details?id=com.linkedin.android"),
         samsungApps("samsung", "samsungapps://ProductDetail/com.linkedin.android")
@@ -55,17 +55,9 @@ public class AppStore {
         private final String deviceManufacturer;
         private final String appStoreUri;
 
-        private SupportedAppStore(String deviceManufacturer, String appStoreUri) {
+        SupportedAppStore(String deviceManufacturer, String appStoreUri) {
             this.deviceManufacturer = deviceManufacturer;
             this.appStoreUri = appStoreUri;
-        }
-
-        public String getDeviceManufacturer() {
-            return deviceManufacturer;
-        }
-
-        public String getAppStoreUri() {
-            return appStoreUri;
         }
 
         public static SupportedAppStore fromDeviceManufacturer() {
@@ -77,6 +69,14 @@ public class AppStore {
             //return google play by default
             return googlePlay;
         }
-    };
+
+        public String getDeviceManufacturer() {
+            return deviceManufacturer;
+        }
+
+        public String getAppStoreUri() {
+            return appStoreUri;
+        }
+    }
 
 }

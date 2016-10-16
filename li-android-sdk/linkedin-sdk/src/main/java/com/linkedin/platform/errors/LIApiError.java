@@ -22,21 +22,10 @@ import org.json.JSONException;
 
 public class LIApiError extends Exception {
 
-    public static enum ErrorType {
-        accessTokenIsNotSet,
-        apiErrorResponse,
-        other;
-    }
-
     private VolleyError volleyError;
     private int httpStatusCode = -1;
     private ApiErrorResponse apiErrorResponse;
     private ErrorType errorType;
-
-    public static LIApiError buildLiApiError(VolleyError volleyError) {
-        return new LIApiError(volleyError);
-    }
-
     public LIApiError(String detailMessage, Throwable throwable) {
         this(ErrorType.other, detailMessage, throwable);
     }
@@ -60,6 +49,10 @@ public class LIApiError extends Exception {
         }
     }
 
+    public static LIApiError buildLiApiError(VolleyError volleyError) {
+        return new LIApiError(volleyError);
+    }
+
     public ApiErrorResponse getApiErrorResponse() {
         return apiErrorResponse;
     }
@@ -75,6 +68,12 @@ public class LIApiError extends Exception {
     @Override
     public String toString() {
         return apiErrorResponse == null ? "exceptionMsg: " + super.getMessage() : apiErrorResponse.toString();
+    }
+
+    public enum ErrorType {
+        accessTokenIsNotSet,
+        apiErrorResponse,
+        other
     }
 
 }
