@@ -12,10 +12,17 @@ import studios.codelight.smartloginlibrary.providers.LoginProviderId;
  */
 public class SmartUser implements Parcelable {
 
-    public static enum Gender {
-        male, female
-    }
+    public static final Creator<SmartUser> CREATOR = new Creator<SmartUser>() {
+        @Override
+        public SmartUser createFromParcel(Parcel in) {
+            return new SmartUser(in);
+        }
 
+        @Override
+        public SmartUser[] newArray(int size) {
+            return new SmartUser[size];
+        }
+    };
     private LoginProviderId providerId;
     private String userId;
     private String username;
@@ -70,18 +77,6 @@ public class SmartUser implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<SmartUser> CREATOR = new Creator<SmartUser>() {
-        @Override
-        public SmartUser createFromParcel(Parcel in) {
-            return new SmartUser(in);
-        }
-
-        @Override
-        public SmartUser[] newArray(int size) {
-            return new SmartUser[size];
-        }
-    };
 
     public String getUserId() {
         return userId;
@@ -171,7 +166,6 @@ public class SmartUser implements Parcelable {
         this.providerId = providerId;
     }
 
-
     public String getDisplayName() {
         return displayName;
     }
@@ -186,5 +180,9 @@ public class SmartUser implements Parcelable {
 
     public void setPhotoUrl(Uri photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public enum Gender {
+        male, female
     }
 }
