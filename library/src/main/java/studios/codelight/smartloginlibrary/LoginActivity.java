@@ -169,17 +169,18 @@ public class LoginActivity extends AppCompatActivity implements
 
     protected void addLoginButtonForProvider(final LoginProviderId providerId){
         View vg = LayoutInflater.from(this).inflate(R.layout.fragment_social_login, mContainer, false);
-        AppCompatButton facebookButton = (AppCompatButton) findViewById(R.id.social_login_button);
+        AppCompatButton socialLoginButton = (AppCompatButton) vg.findViewById(R.id.social_login_button);
 
-        LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(LoginProviderId.FACEBOOK);
-        facebookButton.setCompoundDrawablesWithIntrinsicBounds(loginProvider.providerLogo(), 0, 0, 0);
-        facebookButton.setOnClickListener(new View.OnClickListener() {
+        LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(providerId);
+        loginProvider.sdkInitializer(getApplicationContext());
+        socialLoginButton.setCompoundDrawablesWithIntrinsicBounds(loginProvider.providerLogo(), 0, 0, 0);
+        socialLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doLoginForProvider(providerId);
             }
         });
-        facebookButton.setText(loginProvider.providerSignInText());
+        socialLoginButton.setText(loginProvider.providerSignInText());
         signinContainer.addView(vg);
     }
 

@@ -6,6 +6,7 @@
     <string name="fb_login_text">Sign in with facebook</string>
     <string name="twitter_login_text">Sign in with Twitter</string>
     <string name="google_login_text">Sign in with Google</string>
+    <string name="linkedin_login_text">Sign in with LinkedIn</string>
     <string name="or">or</string>
 
     <!-- hints -->

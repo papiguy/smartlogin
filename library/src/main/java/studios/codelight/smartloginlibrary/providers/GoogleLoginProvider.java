@@ -41,6 +41,8 @@ public class GoogleLoginProvider extends LoginProvider implements GoogleApiClien
             return new GoogleLoginProvider[0];
         }
     };
+    //Google Sign in related
+    private GoogleApiClient mGoogleApiClient;
 
     protected GoogleLoginProvider(Parcel in) {
         super(in);
@@ -55,10 +57,8 @@ public class GoogleLoginProvider extends LoginProvider implements GoogleApiClien
         } else {
             setProviderLogo(R.drawable.ic_google_plus_white_36dp);
         }
+        setProviderSignInText(R.string.google_login_text);
     }
-
-    //Google Sign in related
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public boolean signIn(SmartUser user, AppCompatActivity callingActivity) {

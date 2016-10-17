@@ -48,6 +48,7 @@ public class LinkedInLoginProvider extends LoginProvider implements AuthListener
         } else {
             setProviderLogo(R.drawable.ic_linkedin_white_36dp);
         }
+        setProviderSignInText(R.string.linkedin_login_text);
     }
 
     @Override
