@@ -35,6 +35,7 @@ public class LoginProviderFactory {
                     loginProvider = new LinkedInLoginProvider();
                     break;
             }
+            providerMap.put(providerId, loginProvider);
         }
         return loginProvider;
     }

@@ -49,8 +49,9 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
             return new FacebookLoginProvider[0];
         }
     };
-
-
+    CallbackManager mCallbackManager;
+    ProgressDialog progress;
+    AccessTokenTracker accessTokenTracker;
     public FacebookLoginProvider() {
         super();
         setIdentifier(LoginProviderId.FACEBOOK);
@@ -59,16 +60,19 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
         } else {
             setProviderLogo(R.drawable.ic_facebook_white_36dp);
         }
+        setProviderSignInText(R.string.fb_login_text);
     }
-
-
     protected FacebookLoginProvider(Parcel in) {
         super(in);
     }
 
-    CallbackManager mCallbackManager;
-    ProgressDialog progress;
-    AccessTokenTracker accessTokenTracker;
+    public static ArrayList<String> getDefaultFacebookPermissions() {
+        ArrayList<String> defaultPermissions = new ArrayList();
+        defaultPermissions.add("public_profile");
+        defaultPermissions.add("email");
+        defaultPermissions.add("user_birthday");
+        return defaultPermissions;
+    }
 
     @Override
     public void sdkInitializer(Context context) {
@@ -109,7 +113,7 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
     public boolean signIn(final SmartUser user, final AppCompatActivity callingActivity) {
         progress = ProgressDialog.show(callingActivity, "", getString(R.string.logging_holder), true);
         Toast.makeText(callingActivity, "Facebook login", Toast.LENGTH_SHORT).show();
-        LoginManager.getInstance().logInWithPublishPermissions(callingActivity, appPermissions());
+        LoginManager.getInstance().logInWithReadPermissions(callingActivity, appPermissions());
         LoginManager.getInstance().registerCallback(mCallbackManager, this);
 
 
@@ -132,7 +136,6 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
     public void onActivityResult(Activity callingActivity, int resultCode, Intent data, int requestCode) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
 
     public SmartUser populateFacebookUser(JSONObject object) {
         SmartUser facebookUser = new SmartUser();
@@ -210,7 +213,6 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
         Toast.makeText(context(), R.string.network_error, Toast.LENGTH_SHORT).show();
     }
 
-
     public static class FacebookFields {
         public static final String EMAIL = "email";
         public static final String ID = "id";
@@ -221,14 +223,6 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
         public static final String LAST_NAME = "last_name";
         public static final String NAME = "name";
         public static final String LINK = "link";
-    }
-
-    public static ArrayList<String> getDefaultFacebookPermissions() {
-        ArrayList<String> defaultPermissions = new ArrayList();
-        defaultPermissions.add("public_profile");
-        defaultPermissions.add("email");
-        defaultPermissions.add("user_birthday");
-        return defaultPermissions;
     }
 
 

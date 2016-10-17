@@ -57,7 +57,7 @@ public class LoginConfigBuilder {
     }
 
     public LoginConfigBuilder enableGoogle() {
-        LoginProviderFactory.getInstanceFor(LoginProviderId.GOOGLE);
+        LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(LoginProviderId.GOOGLE);
         config.addLoginProvider(LoginProviderId.GOOGLE);
         return this;
     }
@@ -67,7 +67,7 @@ public class LoginConfigBuilder {
     }
 
     public LoginConfigBuilder enableLinkedIn() {
-        LoginProviderFactory.getInstanceFor(LoginProviderId.LINKEDIN);
+        LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(LoginProviderId.LINKEDIN);
         config.addLoginProvider(LoginProviderId.LINKEDIN);
         return this;
     }
