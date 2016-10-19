@@ -35,7 +35,7 @@ public class SmartUser implements Parcelable {
     private int gender;
     private String profileLink;
     private String displayName;
-    private Uri photoUrl;
+    private String photoUrl;
 
     public SmartUser() {
     }
@@ -53,7 +53,7 @@ public class SmartUser implements Parcelable {
         gender = in.readInt();
         profileLink = in.readString();
         displayName = in.readString();
-        photoUrl = in.readParcelable(Uri.class.getClassLoader());
+        photoUrl = in.readString();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class SmartUser implements Parcelable {
         dest.writeInt(gender);
         dest.writeString(profileLink);
         dest.writeString(displayName);
-        dest.writeParcelable(photoUrl, flags);
+        dest.writeString(photoUrl);
     }
 
     @Override
@@ -174,11 +174,11 @@ public class SmartUser implements Parcelable {
         this.displayName = displayName;
     }
 
-    public Uri getPhotoUrl() {
+    public String getPhotoUrl() {
         return photoUrl;
     }
 
-    public void setPhotoUrl(Uri photoUrl) {
+    public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
 

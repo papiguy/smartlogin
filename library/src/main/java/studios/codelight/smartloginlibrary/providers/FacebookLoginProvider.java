@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -139,6 +140,7 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
 
     public SmartUser populateFacebookUser(JSONObject object) {
         SmartUser facebookUser = new SmartUser();
+        facebookUser.setProviderId(LoginProviderId.FACEBOOK);
         facebookUser.setGender(-1);
         try {
             if (object.has(FacebookFields.EMAIL))
@@ -164,8 +166,11 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
             }
             if (object.has(FacebookFields.LINK))
                 facebookUser.setProfileLink(object.getString(FacebookFields.LINK));
-            if (object.has(FacebookFields.ID))
+            if (object.has(FacebookFields.ID)) {
                 facebookUser.setUserId(object.getString(FacebookFields.ID));
+                String imageUrl = String.format("http://graph.facebook.com/%s/picture?type=large", facebookUser.getUserId());
+                facebookUser.setPhotoUrl(Uri.parse(imageUrl));
+            }
             if (object.has(FacebookFields.NAME))
                 facebookUser.setDisplayName(object.getString(FacebookFields.NAME));
             if (object.has(FacebookFields.FIRST_NAME))
@@ -174,6 +179,8 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
                 facebookUser.setMiddleName(object.getString(FacebookFields.MIDDLE_NAME));
             if (object.has(FacebookFields.LAST_NAME))
                 facebookUser.setLastName(object.getString(FacebookFields.LAST_NAME));
+
+
         } catch (JSONException e) {
             Log.e(getClass().getSimpleName(), e.getMessage());
             facebookUser = null;
@@ -184,18 +191,7 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
     @Override
     public void onSuccess(LoginResult loginResult) {
         progress.setMessage(getString(R.string.getting_data));
-        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                progress.dismiss();
-                SmartUser facebookUser = populateFacebookUser(object);
-                if (facebookUser != null) {
-                    loginListener().loginSuccessful(facebookUser);
-                } else {
-                    loginListener().loginFailed();
-                }
-            }
-        });
+        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new OnLoginResponseHandler());
         request.executeAsync();
     }
 
@@ -223,6 +219,19 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
         public static final String LAST_NAME = "last_name";
         public static final String NAME = "name";
         public static final String LINK = "link";
+    }
+
+    class OnLoginResponseHandler implements GraphRequest.GraphJSONObjectCallback {
+        @Override
+        public void onCompleted(JSONObject object, GraphResponse response) {
+            progress.dismiss();
+            SmartUser facebookUser = populateFacebookUser(object);
+            if (facebookUser != null) {
+                loginListener().loginSuccessful(facebookUser);
+            } else {
+                loginListener().loginFailed();
+            }
+        }
     }
 
 
