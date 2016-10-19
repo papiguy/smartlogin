@@ -172,7 +172,6 @@ public class LoginActivity extends AppCompatActivity implements
         AppCompatButton socialLoginButton = (AppCompatButton) vg.findViewById(R.id.social_login_button);
 
         LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(providerId);
-        loginProvider.sdkInitializer(getApplicationContext());
         socialLoginButton.setCompoundDrawablesWithIntrinsicBounds(loginProvider.providerLogo(), 0, 0, 0);
         socialLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,6 +277,7 @@ public class LoginActivity extends AppCompatActivity implements
             if (sessionManager.updateUserSession(this, user)) {
                 Intent intent = new Intent();
                 intent.putExtra(USER_SESSION, user);
+                setResult(0, intent);
                 finish();
             } else {
                 DialogUtil.getErrorDialog(R.string.network_error, this);

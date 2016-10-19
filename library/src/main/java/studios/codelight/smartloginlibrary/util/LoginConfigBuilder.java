@@ -52,13 +52,26 @@ public class LoginConfigBuilder {
         LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(LoginProviderId.FACEBOOK);
         loginProvider.setAppId(appId);
         loginProvider.setAppPermissions(facebookPermissions);
+        //Must be the last call
+        loginProvider.sdkInitializer(context);
         config.addLoginProvider(LoginProviderId.FACEBOOK);
         return this;
     }
 
     public LoginConfigBuilder enableGoogle() {
         LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(LoginProviderId.GOOGLE);
+        //Must be the last call
+        loginProvider.sdkInitializer(context);
         config.addLoginProvider(LoginProviderId.GOOGLE);
+        return this;
+    }
+
+
+    public LoginConfigBuilder enableLinkedIn() {
+        LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(LoginProviderId.LINKEDIN);
+        //Must be the last call
+        loginProvider.sdkInitializer(context);
+        config.addLoginProvider(LoginProviderId.LINKEDIN);
         return this;
     }
 
@@ -66,9 +79,5 @@ public class LoginConfigBuilder {
         return config;
     }
 
-    public LoginConfigBuilder enableLinkedIn() {
-        LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(LoginProviderId.LINKEDIN);
-        config.addLoginProvider(LoginProviderId.LINKEDIN);
-        return this;
-    }
+
 }
