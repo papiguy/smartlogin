@@ -155,7 +155,7 @@ public class GoogleLoginProvider extends LoginProvider implements GoogleApiClien
         //populate the user
         googleUser.setDisplayName(account.getDisplayName());
         //googleUser.setIdToken(account.getIdToken());
-        googleUser.setPhotoUrl(account.getPhotoUrl());
+        googleUser.setPhotoUrl(account.getPhotoUrl().toString());
         googleUser.setEmail(account.getEmail());
         //googleUser.setServerAuthCode(account.getServerAuthCode());
 
