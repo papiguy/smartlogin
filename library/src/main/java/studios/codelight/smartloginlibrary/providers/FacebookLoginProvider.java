@@ -117,13 +117,11 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
         LoginManager.getInstance().logInWithReadPermissions(callingActivity, appPermissions());
         LoginManager.getInstance().registerCallback(mCallbackManager, this);
 
-
         return true;
     }
 
     @Override
     public boolean signUp(SmartUser newUser, Activity callingActivity) {
-
         //this functionality is not supported by this provider
         return false;
     }
@@ -138,55 +136,7 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    public SmartUser populateFacebookUser(JSONObject object) {
-        SmartUser facebookUser = new SmartUser();
-        facebookUser.setProviderId(LoginProviderId.FACEBOOK);
-        facebookUser.setGender(-1);
-        try {
-            if (object.has(FacebookFields.EMAIL))
-                facebookUser.setEmail(object.getString(FacebookFields.EMAIL));
-            if (object.has(FacebookFields.BIRTHDAY))
-                facebookUser.setBirthday(object.getString(FacebookFields.BIRTHDAY));
-            if (object.has(FacebookFields.GENDER)) {
-                try {
-                    SmartUser.Gender gender = SmartUser.Gender.valueOf(object.getString(FacebookFields.GENDER));
-                    switch (gender) {
-                        case male:
-                            facebookUser.setGender(0);
-                            break;
-                        case female:
-                            facebookUser.setGender(1);
-                            break;
-                    }
-                } catch (Exception e) {
-                    //if gender is not in the enum it is set to unspecified value (-1)
-                    facebookUser.setGender(-1);
-                    Log.e(getClass().getSimpleName(), e.getMessage());
-                }
-            }
-            if (object.has(FacebookFields.LINK))
-                facebookUser.setProfileLink(object.getString(FacebookFields.LINK));
-            if (object.has(FacebookFields.ID)) {
-                facebookUser.setUserId(object.getString(FacebookFields.ID));
-                String imageUrl = String.format("http://graph.facebook.com/%s/picture?type=large", facebookUser.getUserId());
-                facebookUser.setPhotoUrl(Uri.parse(imageUrl));
-            }
-            if (object.has(FacebookFields.NAME))
-                facebookUser.setDisplayName(object.getString(FacebookFields.NAME));
-            if (object.has(FacebookFields.FIRST_NAME))
-                facebookUser.setFirstName(object.getString(FacebookFields.FIRST_NAME));
-            if (object.has(FacebookFields.MIDDLE_NAME))
-                facebookUser.setMiddleName(object.getString(FacebookFields.MIDDLE_NAME));
-            if (object.has(FacebookFields.LAST_NAME))
-                facebookUser.setLastName(object.getString(FacebookFields.LAST_NAME));
 
-
-        } catch (JSONException e) {
-            Log.e(getClass().getSimpleName(), e.getMessage());
-            facebookUser = null;
-        }
-        return facebookUser;
-    }
 
     @Override
     public void onSuccess(LoginResult loginResult) {
@@ -231,6 +181,57 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
             } else {
                 loginListener().loginFailed();
             }
+        }
+
+
+        public SmartUser populateFacebookUser(JSONObject object) {
+            SmartUser facebookUser = new SmartUser();
+            facebookUser.setProviderId(LoginProviderId.FACEBOOK);
+            facebookUser.setGender(-1);
+            try {
+                if (object.has(FacebookFields.EMAIL))
+                    facebookUser.setEmail(object.getString(FacebookFields.EMAIL));
+                if (object.has(FacebookFields.BIRTHDAY))
+                    facebookUser.setBirthday(object.getString(FacebookFields.BIRTHDAY));
+                if (object.has(FacebookFields.GENDER)) {
+                    try {
+                        SmartUser.Gender gender = SmartUser.Gender.valueOf(object.getString(FacebookFields.GENDER));
+                        switch (gender) {
+                            case male:
+                                facebookUser.setGender(0);
+                                break;
+                            case female:
+                                facebookUser.setGender(1);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        //if gender is not in the enum it is set to unspecified value (-1)
+                        facebookUser.setGender(-1);
+                        Log.e(getClass().getSimpleName(), e.getMessage());
+                    }
+                }
+                if (object.has(FacebookFields.LINK))
+                    facebookUser.setProfileLink(object.getString(FacebookFields.LINK));
+                if (object.has(FacebookFields.ID)) {
+                    facebookUser.setUserId(object.getString(FacebookFields.ID));
+                    String imageUrl = String.format("http://graph.facebook.com/%s/picture?type=large", facebookUser.getUserId());
+                    facebookUser.setPhotoUrl(imageUrl);
+                }
+                if (object.has(FacebookFields.NAME))
+                    facebookUser.setDisplayName(object.getString(FacebookFields.NAME));
+                if (object.has(FacebookFields.FIRST_NAME))
+                    facebookUser.setFirstName(object.getString(FacebookFields.FIRST_NAME));
+                if (object.has(FacebookFields.MIDDLE_NAME))
+                    facebookUser.setMiddleName(object.getString(FacebookFields.MIDDLE_NAME));
+                if (object.has(FacebookFields.LAST_NAME))
+                    facebookUser.setLastName(object.getString(FacebookFields.LAST_NAME));
+
+
+            } catch (JSONException e) {
+                Log.e(getClass().getSimpleName(), e.getMessage());
+                facebookUser = null;
+            }
+            return facebookUser;
         }
     }
 

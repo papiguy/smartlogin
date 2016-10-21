@@ -67,10 +67,12 @@ public class LoginConfigBuilder {
     }
 
 
-    public LoginConfigBuilder enableLinkedIn() {
+    public LoginConfigBuilder enableLinkedIn(ArrayList<String> linkedInPermissions) {
         LoginProvider loginProvider = LoginProviderFactory.getInstanceFor(LoginProviderId.LINKEDIN);
+        loginProvider.setAppPermissions(linkedInPermissions);
         //Must be the last call
         loginProvider.sdkInitializer(context);
+
         config.addLoginProvider(LoginProviderId.LINKEDIN);
         return this;
     }
