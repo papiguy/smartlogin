@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -141,7 +139,20 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
     @Override
     public void onSuccess(LoginResult loginResult) {
         progress.setMessage(getString(R.string.getting_data));
-        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new OnLoginResponseHandler());
+
+        final GraphRequest.GraphJSONObjectCallback callback = new OnMeResponseHandler();
+
+        GraphRequest.Callback wrapper = new GraphRequest.Callback() {
+            @Override
+            public void onCompleted(GraphResponse response) {
+                if (callback != null) {
+                    callback.onCompleted(response.getJSONObject(), response);
+                }
+            }
+        };
+        Bundle args = new Bundle();
+        args.putString("fields", "id,name,first_name,last_name,picture,email,gender");
+        GraphRequest request = new GraphRequest(loginResult.getAccessToken(), "me", args, null, wrapper);
         request.executeAsync();
     }
 
@@ -171,7 +182,7 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
         public static final String LINK = "link";
     }
 
-    class OnLoginResponseHandler implements GraphRequest.GraphJSONObjectCallback {
+    class OnMeResponseHandler implements GraphRequest.GraphJSONObjectCallback {
         @Override
         public void onCompleted(JSONObject object, GraphResponse response) {
             progress.dismiss();
@@ -185,6 +196,9 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
 
 
         public SmartUser populateFacebookUser(JSONObject object) {
+            if (object == null){
+                return null;
+            }
             SmartUser facebookUser = new SmartUser();
             facebookUser.setProviderId(LoginProviderId.FACEBOOK);
             facebookUser.setGender(-1);
@@ -214,7 +228,7 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
                     facebookUser.setProfileLink(object.getString(FacebookFields.LINK));
                 if (object.has(FacebookFields.ID)) {
                     facebookUser.setUserId(object.getString(FacebookFields.ID));
-                    String imageUrl = String.format("http://graph.facebook.com/%s/picture?type=large", facebookUser.getUserId());
+                    String imageUrl = String.format("http://graph.facebook.com/%s/picture?type=small", facebookUser.getUserId());
                     facebookUser.setPhotoUrl(imageUrl);
                 }
                 if (object.has(FacebookFields.NAME))
