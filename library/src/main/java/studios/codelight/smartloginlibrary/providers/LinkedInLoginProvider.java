@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import studios.codelight.smartloginlibrary.R;
 import studios.codelight.smartloginlibrary.session.SmartUser;
+import studios.codelight.smartloginlibrary.session.UserSessionManager;
 
 /**
  * Created by nitin on 9/9/16.
@@ -76,7 +77,6 @@ public class LinkedInLoginProvider extends LoginProvider implements AuthListener
     @Override
     public boolean logout(SmartUser user) {
 
-
         LISessionManager.getInstance(context()).clearSession();
         return true;
     }
@@ -89,6 +89,12 @@ public class LinkedInLoginProvider extends LoginProvider implements AuthListener
 
     @Override
     public boolean isLoggedIn(SmartUser user) {
+        LISessionManager sessionManager = LISessionManager.getInstance(context());
+        LISession session = sessionManager.getSession();
+        if (session.isValid()) {
+            return true;
+        }
+        UserSessionManager.logout(context());
         return false;
     }
 

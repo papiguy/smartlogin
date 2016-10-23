@@ -4,10 +4,10 @@ package studios.codelight.smartloginlibrary.providers;
  * Created by nitin on 9/9/16.
  */
 public enum LoginProviderId {
-    FACEBOOK(0),
-    LINKEDIN(1),
-    GOOGLE(2),
-    CUSTOM(3);
+    FACEBOOK(1),
+    LINKEDIN(2),
+    GOOGLE(3),
+    CUSTOM(4);
 
     int ordinal;
 
@@ -21,11 +21,11 @@ public enum LoginProviderId {
 
     public static LoginProviderId from(int intVal){
         switch (intVal){
-            case 0:
-                return FACEBOOK;
             case 1:
-                return LINKEDIN;
+                return FACEBOOK;
             case 2:
+                return LINKEDIN;
+            case 3:
                 return GOOGLE;
         }
         return CUSTOM;

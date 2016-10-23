@@ -28,6 +28,8 @@ import static studios.codelight.smartloginlibrary.session.UserSessionManager.USE
 public class LoginActivity extends AppCompatActivity implements
         LoginProvider.LoginStatusListener {
 
+    public static final int SIGNIN_SUCCESSFUL = 1;
+    public static final int SIGNIN_FAILED = 0;
     public static String EXTRA_LOGIN_CONFIG = "login_config";
 
     EditText usernameEditText, passwordEditText, usernameSignup, emailSignup, passwordSignup, repeatPasswordSignup;
@@ -277,7 +279,7 @@ public class LoginActivity extends AppCompatActivity implements
             if (sessionManager.updateUserSession(this, user)) {
                 Intent intent = new Intent();
                 intent.putExtra(USER_SESSION, user);
-                setResult(0, intent);
+                setResult(SIGNIN_SUCCESSFUL, intent);
                 finish();
             } else {
                 DialogUtil.getErrorDialog(R.string.network_error, this);
@@ -291,6 +293,7 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void loginFailed(){
         mProcessingLoginFor = null;
+        DialogUtil.getErrorDialog(R.string.login_failed, this);
     }
 
     @Override
