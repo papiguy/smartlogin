@@ -228,7 +228,7 @@ public class FacebookLoginProvider extends LoginProvider implements FacebookCall
                     facebookUser.setProfileLink(object.getString(FacebookFields.LINK));
                 if (object.has(FacebookFields.ID)) {
                     facebookUser.setUserId(object.getString(FacebookFields.ID));
-                    String imageUrl = String.format("http://graph.facebook.com/%s/picture?type=small", facebookUser.getUserId());
+                    String imageUrl = String.format("https://graph.facebook.com/%s/picture?type=small", facebookUser.getUserId());
                     facebookUser.setPhotoUrl(imageUrl);
                 }
                 if (object.has(FacebookFields.NAME))
