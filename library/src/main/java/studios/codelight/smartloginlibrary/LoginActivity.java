@@ -32,13 +32,13 @@ public class LoginActivity extends AppCompatActivity implements
     public static final int SIGNIN_FAILED = 0;
     public static String EXTRA_LOGIN_CONFIG = "login_config";
 
-    EditText usernameEditText, passwordEditText, usernameSignup, emailSignup, passwordSignup, repeatPasswordSignup;
-    ViewGroup mContainer;
-    LinearLayout signinContainer, signupContainer;
-    ImageView appLogo;
+    protected EditText usernameEditText, passwordEditText, usernameSignup, emailSignup, passwordSignup, repeatPasswordSignup;
+    protected ViewGroup mContainer;
+    protected LinearLayout signinContainer, signupContainer;
+    protected ImageView appLogo;
 
 
-    LoginProviderId mProcessingLoginFor = null;
+    protected LoginProviderId mProcessingLoginFor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

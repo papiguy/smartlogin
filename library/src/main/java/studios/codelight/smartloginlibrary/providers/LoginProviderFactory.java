@@ -20,6 +20,7 @@ public class LoginProviderFactory {
 
     private static LoginConfig mConfig;
     private static HashMap<LoginProviderId, LoginProvider> providerMap = new HashMap<LoginProviderId, LoginProvider>();
+    private static Class<? extends LoginActivity> sLoginActivityClass = LoginActivity.class;
 
     public static LoginProvider getInstanceFor(LoginProviderId providerId) {
         LoginProvider loginProvider = providerMap.get(providerId);
@@ -45,12 +46,16 @@ public class LoginProviderFactory {
     }
 
     public static Intent intentForLoginActivity(Activity context) {
-        Intent intent = new Intent(context, LoginActivity.class);
+        Intent intent = new Intent(context, sLoginActivityClass);
         intent.putExtra(EXTRA_LOGIN_CONFIG, mConfig);
         return intent;
     }
 
     public static void configure(LoginConfig config){
         mConfig = config;
+    }
+
+    public static void setCustomLoginActivity(Class<? extends LoginActivity> customLoginClass){
+        sLoginActivityClass = customLoginClass;
     }
 }
