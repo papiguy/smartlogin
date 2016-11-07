@@ -65,8 +65,12 @@ public class LinkedInLoginProvider extends LoginProvider implements AuthListener
     @Override
     public boolean signIn(SmartUser user, AppCompatActivity callingActivity) {
 
-        LISessionManager.getInstance(context()).init(callingActivity, scopeFromPersmissions(appPermissions()), this, true);
-        return false;
+        if (!isLoggedIn(user)) {
+            LISessionManager.getInstance(context()).init(callingActivity, scopeFromPersmissions(appPermissions()), this, true);
+        } else {
+            onAuthSuccess();
+        }
+        return true;
     }
 
     @Override
@@ -108,10 +112,15 @@ public class LinkedInLoginProvider extends LoginProvider implements AuthListener
                 Scope.R_FULLPROFILE
         };
 
+        Scope.LIPermission[] defaultSet = new Scope.LIPermission[]{
+                Scope.R_BASICPROFILE,
+                Scope.R_EMAILADDRESS,
+        };
+
         Scope.LIPermission[] liPermissions;
 
         if (permissions == null || permissions.size() == 0) {
-            liPermissions = masterSet;
+            liPermissions = defaultSet;
         } else {
             liPermissions = new Scope.LIPermission[permissions.size()];
 
